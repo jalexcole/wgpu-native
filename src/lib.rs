@@ -673,15 +673,56 @@ pub unsafe extern "C" fn wgpuCreateInstance(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn wgpuGetInstanceCapabilities(
-    capabilities: Option<&mut native::WGPUInstanceLimits>,
+pub unsafe extern "C" fn wgpuGetInstanceLimits(
+    limits: Option<&mut native::WGPUInstanceLimits>,
 ) -> native::WGPUStatus {
-    let capabilities = capabilities.expect("invalid return pointer \"capabilities\"");
+    let limits = limits.expect("invalid return pointer \"limits\"");
 
     // Timed WaitAny is expressed only via limits; unsupported => max count = 0
-    capabilities.timedWaitAnyMaxCount = 0;
+    limits.timedWaitAnyMaxCount = 0;
 
     native::WGPUStatus_Success
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn wgpuGetInstanceFeatures(
+    _features: Option<&mut native::WGPUSupportedInstanceFeatures>,
+) {
+    unimplemented!("wgpuGetInstanceFeatures is not implemented");
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn wgpuHasInstanceFeature(
+    _feature_name: native::WGPUInstanceFeatureName,
+) -> native::WGPUBool {
+    unimplemented!("wgpuHasInstanceFeature is not implemented");
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn wgpuSupportedInstanceFeaturesFreeMembers(
+    _supported_features: native::WGPUSupportedInstanceFeatures,
+) {
+    unimplemented!("wgpuSupportedInstanceFeaturesFreeMembers is not implemented");
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn wgpuBufferReadMappedRange(
+    _buffer: native::WGPUBuffer,
+    _offset: usize,
+    _data: *mut c_void,
+    _size: usize,
+) -> native::WGPUStatus {
+    unimplemented!("wgpuBufferReadMappedRange is not implemented");
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn wgpuBufferWriteMappedRange(
+    _buffer: native::WGPUBuffer,
+    _offset: usize,
+    _data: *const c_void,
+    _size: usize,
+) -> native::WGPUStatus {
+    unimplemented!("wgpuBufferWriteMappedRange is not implemented");
 }
 
 // Adapter methods
@@ -2170,7 +2211,6 @@ pub unsafe extern "C" fn wgpuDeviceCreateRenderPipeline(
                             }
                             native::WGPUVertexStepMode_Vertex => wgt::VertexStepMode::Vertex,
                             native::WGPUVertexStepMode_Instance => wgt::VertexStepMode::Instance,
-                            native::WGPUVertexStepMode_VertexBufferNotUsed
                             | native::WGPUVertexStepMode_Undefined => {
                                 panic!("Unused vertex buffers are currently not supported in vertex buffer layout. Instead, use a vertex buffer with no attributes and a defined vertex step mode.")
                             }
